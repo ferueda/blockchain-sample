@@ -1,5 +1,4 @@
 from flask import Flask, json, jsonify
-from werkzeug.wrappers import response
 from blockchain import Blockchain
 
 app = Flask(__name__)
