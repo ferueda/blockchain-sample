@@ -50,7 +50,7 @@ def add_transaction():
     return 'elements missing', 400
 
   index = blockchain.add_transaction(json['sender'], json['receiver'], json['amount'])
-  response = {'message': f'transaction added to block {index}'}
+  response = {'message': f'Transaction added to block {index}'}
   return jsonify(response), 201
 
 @app.route('/connect-node', methods=['POST'])
@@ -64,7 +64,18 @@ def connect_node():
   for node in nodes:
     blockchain.add_node(node)
 
-  response = {'message': 'all nodes connected', 'total_nodes': list(blockchain.nodes)}
+  response = {'message': 'All nodes connected', 'total_nodes': list(blockchain.nodes)}
   return jsonify(response), 201
+
+@app.route('/replace-chain', methods=['GET'])
+def replace_chain():
+  is_chain_replaced = blockchain.replace_chain()
+
+  if is_chain_replaced:
+    response = {'message': 'Chain was replaced', 'result': True , 'new_chain': blockchain.chain}
+  else:
+    response = {'message': "Chain was not replaced, not the longest one.", 'result': False, 'current_chain': blockchain.chain}
+    
+  return jsonify(response), 200
 
 app.run(host = '0.0.0.0', port = 5000)
